@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Рандомайзер РФ: Сервисы</title>
+    
+    <!-- CSS (Bulma + FontAwesome) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Фон -->
+    <div class="bg-gradient"></div>
+
+    <!-- Меню -->
+    <nav class="navbar is-fixed-top glass-ui">
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <span class="icon is-large mr-2 has-text-link"><i class="fas fa-shield-alt fa-2x"></i></span>
+                <div>
+                    <h1 class="title is-6 mb-0 is-uppercase has-text-weight-bold">РФ <span class="has-text-danger">СЕРВИСЫ</span></h1>
+                    <p class="subtitle is-7">v4.5 Stable (Real Data)</p>
+                </div>
+            </div>
+            <a role="button" class="navbar-burger" onclick="Core.toggleSidebar()">
+                <span></span><span></span><span></span>
+            </a>
+        </div>
+        <div class="navbar-end p-2 is-flex is-align-items-center">
+            <button id="btn_sound" class="button is-small is-ghost" onclick="Core.toggleMute()"><i class="fas fa-volume-up"></i></button>
+            <button class="button is-small is-ghost" onclick="Core.toggleTheme()"><i class="fas fa-adjust"></i></button>
+        </div>
+    </nav>
+
+    <div class="columns is-gapless is-fullheight mt-6 pt-4 app-layout">
+        
+        <!-- Сайдбар -->
+        <div class="column is-2 sidebar glass-ui">
+            <aside class="menu p-4">
+                <p class="menu-label">И��фо-центр</p>
+                <ul class="menu-list">
+                    <li><a class="is-active" onclick="Core.switch('currency', this)"><i class="fas fa-ruble-sign fa-fw has-text-success"></i> Курсы ЦБ РФ</a></li>
+                    <li><a onclick="Core.switch('weather', this)"><i class="fas fa-cloud-sun fa-fw has-text-info"></i> Погода в городах</a></li>
+                    <li><a onclick="Core.switch('news', this)"><i class="fas fa-globe fa-fw has-text-link"></i> Мониторинг СМИ</a></li>
+                </ul>
+
+                <p class="menu-label">Военная тематика</p>
+                <ul class="menu-list">
+                    <li><a onclick="Core.switch('callsign', this)"><i class="fas fa-walkie-talkie fa-fw has-text-danger"></i> Генератор Позывного</a></li>
+                </ul>
+
+                <p class="menu-label">Утилиты</p>
+                <ul class="menu-list">
+                    <li><a onclick="Core.switch('pass', this)"><i class="fas fa-key fa-fw"></i> Безопасность</a></li>
+                    <li><a onclick="Core.switch('qr', this)"><i class="fas fa-qrcode fa-fw"></i> QR Код</a></li>
+                    <li><a onclick="Core.switch('num', this)"><i class="fas fa-hashtag fa-fw"></i> ГСЧ (Числа)</a></li>
+                    <li><a onclick="Core.switch('list', this)"><i class="fas fa-list fa-fw"></i> Жребий (Список)</a></li>
+                </ul>
+
+                <!-- Блок Патриот -->
+                <div class="mt-auto pt-4 border-top has-text-centered">
+                    <div class="patriot-card">
+                        <img src="flag.jpg" alt="Флаг РФ" class="rounded-img mb-2" onerror="this.style.display='none'">
+                        <p class="is-size-7 has-text-weight-bold">Работаем для Победы 🇷🇺</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Контент -->
+        <div class="column main-content">
+            
+            <!-- 1. ВАЛЮТА (РЕАЛЬНАЯ) -->
+            <div id="tool_currency" class="tool-section active container">
+                <h1 class="title">Курсы Валют (ЦБ РФ)</h1>
+                <div class="glass-box p-5">
+                    <div class="columns is-mobile is-multiline" id="currency_board">
+                        <div class="column is-12 has-text-centered"><i class="fas fa-sync fa-spin"></i> Загрузка данных...</div>
+                    </div>
+                    <p class="help has-text-grey mt-2">* Данные обновляются ежедневно по курсу ЦБ.</p>
+                    <button onclick="Tools.currency()" class="button is-small is-fullwidth mt-2">Обновить принудительно</button>
+                </div>
+            </div>
+
+            <!-- 2. ПОГОДА (РЕАЛЬНАЯ) -->
+            <div id="tool_weather" class="tool-section container">
+                <h1 class="title">Погода в России</h1>
+                <div class="glass-box p-5">
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <div class="select is-fullwidth">
+                                <select id="weather_city">
+                                    <option value="55.75,37.61">Москва</option>
+                                    <option value="59.93,30.33">Санкт-Петербург</option>
+                                    <option value="44.61,33.52">Севастополь</option>
+                                    <option value="48.01,37.80">Донецк</option>
+                                    <option value="48.57,39.30">Луганск</option>
+                                    <option value="55.78,49.12">Казань</option>
+                                    <option value="55.00,82.93">Новосибирск</option>
+                                    <option value="43.11,131.88">Владивосток</option>
+                                    <option value="43.60,39.73">Сочи</option>
+                                    <option value="56.84,60.60">Екатеринбург</option>
+                                    <option value="43.31,45.69">Грозный</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" onclick="Tools.weather()">Узнать</button>
+                        </div>
+                    </div>
+                    
+                    <div id="weather_result" class="has-text-centered mt-5 is-hidden">
+                        <div class="columns is-mobile is-vcentered">
+                            <div class="column">
+                                <i class="fas fa-temperature-high fa-2x has-text-danger"></i>
+                                <p class="title is-2" id="w_temp">--</p>
+                                <p class="subtitle is-6">Температура</p>
+                            </div>
+                            <div class="column">
+                                <i class="fas fa-wind fa-2x has-text-info"></i>
+                                <p class="title is-2" id="w_wind">--</p>
+                                <p class="subtitle is-6">Ветер (км/ч)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. НОВОСТИ (ССЫЛКИ) -->
+            <div id="tool_news" class="tool-section container">
+                <h1 class="title">Мониторинг СМИ</h1>
+                <div class="columns is-multiline">
+                    <div class="column is-6">
+                        <a href="https://ria.ru/lenta/" target="_blank" class="box link-card">
+                            <div class="is-flex is-align-items-center">
+                                <span class="icon is-large has-text-link"><i class="fas fa-newspaper fa-2x"></i></span>
+                                <div class="ml-3">
+                                    <p class="title is-5">РИА Новости</p>
+                                    <p class="subtitle is-7">Лента в реальном времени</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="column is-6">
+                        <a href="https://tass.ru/" target="_blank" class="box link-card">
+                            <div class="is-flex is-align-items-center">
+                                <span class="icon is-large has-text-primary"><i class="fas fa-rss fa-2x"></i></span>
+                                <div class="ml-3">
+                                    <p class="title is-5">ТАСС</p>
+                                    <p class="subtitle is-7">Главное за сегодня</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="column is-6">
+                        <a href="https://yandex.ru/news/" target="_blank" class="box link-card">
+                            <div class="is-flex is-align-items-center">
+                                <span class="icon is-large has-text-danger"><i class="fas fa-fire fa-2x"></i></span>
+                                <div class="ml-3">
+                                    <p class="title is-5">Яндекс.Сюжеты</p>
+                                    <p class="subtitle is-7">Агрегато�� событий</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="column is-6">
+                        <a href="https://mil.ru/" target="_blank" class="box link-card army-card">
+                            <div class="is-flex is-align-items-center">
+                                <span class="icon is-large has-text-white"><i class="fas fa-star fa-2x"></i></span>
+                                <div class="ml-3">
+                                    <p class="title is-5 has-text-white">Минобороны РФ</p>
+                                    <p class="subtitle is-7 has-text-white">Официальные сводки</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. ПОЗЫВНОЙ -->
+            <div id="tool_callsign" class="tool-section container has-text-centered">
+                <h1 class="title">Генератор Позывного</h1>
+                <div class="glass-box p-6 army-style">
+                    <p class="subtitle mb-2">Тактический идентификатор</p>
+                    <div id="res_callsign" class="title is-1 is-uppercase my-4" style="letter-spacing: 2px;">---</div>
+                    <button onclick="Tools.callsign()" class="button is-dark is-medium is-fullwidth">Сгенерировать</button>
+                </div>
+            </div>
+
+            <!-- 5. ПАРОЛИ -->
+            <div id="tool_pass" class="tool-section container">
+                <h1 class="title">Генератор Паролей</h1>
+                <div class="glass-box p-5">
+                    <div class="field">
+                        <label class="label">Длина: <span id="pass_len_val">14</span></label>
+                        <input id="pass_len" type="range" min="8" max="64" value="14" class="slider is-fullwidth" oninput="document.getElementById('pass_len_val').innerText=this.value">
+                    </div>
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input id="pass_out" class="input is-medium is-family-monospace" readonly>
+                        </div>
+                        <div class="control">
+                            <button class="button is-primary is-medium" onclick="Tools.password()">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-medium" onclick="Tools.copyPass()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. QR -->
+            <div id="tool_qr" class="tool-section container">
+                <h1 class="title">QR Код</h1>
+                <div class="glass-box p-5">
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input id="qr_text" class="input" type="text" placeholder="Введите ссылку или текст...">
+                        </div>
+                        <div class="control">
+                            <button class="button is-dark" onclick="Tools.qr()">Создать</button>
+                        </div>
+                    </div>
+                    <div id="qr_result" class="has-text-centered mt-4"></div>
+                </div>
+            </div>
+
+            <!-- 7. ЧИСЛА -->
+            <div id="tool_num" class="tool-section container">
+                <h1 class="title">Случайные Числа</h1>
+                <div class="glass-box p-5">
+                    <div class="columns">
+                        <div class="column"><label class="label">От</label><input id="std_min" class="input" type="text" value="1"></div>
+                        <div class="column"><label class="label">До</label><input id="std_max" class="input" type="number" value="100"></div>
+                    </div>
+                    <button onclick="Tools.numbers()" class="button is-link is-fullwidth">Сгенерировать</button>
+                    <div id="res_num" class="mt-4 has-text-centered title is-3"></div>
+                </div>
+            </div>
+
+            <!-- 8. СПИСКИ -->
+            <div id="tool_list" class="tool-section container">
+                <h1 class="title">Жребий / Выбор</h1>
+                <div class="glass-box p-5">
+                    <label class="label">Введите варианты (по строкам)</label>
+                    <textarea id="list_input" class="textarea" rows="4"></textarea>
+                    <button onclick="Tools.list()" class="button is-success is-fullwidth mt-2">Выбрать один</button>
+                    <div id="res_list" class="mt-4 has-text-centered title is-4 has-text-primary"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- HACKER CONSOLE -->
+    <div id="hacker_overlay" class="hacker-overlay" style="display: none;">
+        <div class="hacker-window">
+            <div class="hacker-head">
+                <span><i class="fas fa-terminal"></i> SYSTEM_ROOT // PATRIOT_NET</span>
+                <span class="is-clickable" onclick="Core.consoleClose()">[X]</span>
+            </div>
+            <div id="hacker_log" class="hacker-body"></div>
+            <div class="hacker-foot">
+                <span>admin@ru:~#</span>
+                <input type="text" id="hacker_input" autocomplete="off" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <script src="core.js"></script>
+    <script src="tools.js"></script>
+</body>
+</html>
