@@ -1,0 +1,127 @@
+:root {
+    --primary: #0039a6; /* Синий РФ */
+    --secondary: #d52b1e; /* Красный РФ */
+    --bg-light: #f4f7f6;
+    --bg-dark: #1a1a2e;
+    --text-light: #2c3e50;
+    --text-dark: #ecf0f1;
+    --glass-light: rgba(255, 255, 255, 0.95);
+    --glass-dark: rgba(30, 41, 59, 0.95);
+}
+
+/* СВЕТЛАЯ ТЕМА (По умолчанию) */
+[data-theme="light"] {
+    --bg: var(--bg-light);
+    --text: var(--text-light);
+    --panel-bg: var(--glass-light);
+    --border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* ТЕМНАЯ ТЕМА */
+[data-theme="dark"] {
+    --bg: var(--bg-dark);
+    --text: var(--text-dark);
+    --panel-bg: var(--glass-dark);
+    --border: 1px solid rgba(255,255,255,0.1);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+}
+
+.bg-gradient {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,57,166,0.05) 50%, rgba(213,43,30,0.05) 100%);
+}
+
+/* UI ELEMENTS */
+.glass-ui, .glass-box {
+    background: var(--panel-bg);
+    backdrop-filter: blur(10px);
+    border: var(--border);
+    color: var(--text);
+}
+.glass-box { border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+
+/* SIDEBAR & NAV */
+.navbar { border-bottom: var(--border); background: var(--panel-bg); }
+.sidebar { height: 100%; border-right: var(--border); background: var(--panel-bg); overflow-y: auto; }
+.navbar-item, .title, .subtitle, .label { color: var(--text) !important; }
+
+.menu-list a { color: var(--text); border-radius: 6px; margin-bottom: 4px; }
+.menu-list a:hover { background: rgba(0, 57, 166, 0.1); }
+.menu-list a.is-active { background: var(--primary); color: #fff; }
+
+/* INPUTS */
+.input, .textarea, .select select {
+    background: rgba(127,127,127,0.05);
+    border: var(--border);
+    color: var(--text);
+}
+.input:focus, .textarea:focus, .select select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 57, 166, 0.2);
+}
+
+/* CARDS & TOOLS */
+.tool-section { display: none; animation: fadeIn 0.3s ease; }
+.tool-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.patriot-card {
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0.2));
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 10px;
+    padding: 10px;
+}
+.rounded-img { border-radius: 6px; max-height: 100px; object-fit: cover; }
+
+.army-style {
+    border-left: 4px solid var(--secondary);
+    background: linear-gradient(90deg, rgba(213,43,30,0.05), transparent);
+}
+
+.link-card {
+    transition: transform 0.2s;
+    background: var(--panel-bg);
+    border: var(--border);
+    color: var(--text);
+    height: 100%;
+}
+.link-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.army-card { background: #2c3e50; border-color: #34495e; }
+
+/* CURRENCY */
+.currency-item {
+    padding: 10px; border-bottom: 1px solid rgba(127,127,127,0.1);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.currency-flag { font-size: 1.5em; margin-right: 10px; }
+.currency-val { font-weight: bold; font-size: 1.2em; color: var(--text); }
+
+/* HACKER CONSOLE */
+.hacker-overlay {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.95); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+}
+.hacker-window {
+    width: 800px; height: 500px; background: #000;
+    border: 1px solid #0f0; color: #0f0;
+    font-family: 'Courier New', monospace;
+    display: flex; flex-direction: column; padding: 10px;
+}
+.hacker-head { border-bottom: 1px solid #005500; padding-bottom: 5px; display: flex; justify-content: space-between; }
+.hacker-body { flex-grow: 1; overflow-y: auto; padding: 10px 0; white-space: pre-wrap; }
+.hacker-foot { border-top: 1px dashed #005500; padding-top: 10px; display: flex; gap: 10px; }
+#hacker_input { flex-grow: 1; background: transparent; border: none; color: #fff; outline: none; font-family: monospace; }
+
+/* MEDIA */
+@media(max-width: 768px) {
+    .sidebar { position: fixed; z-index: 1000; width: 85%; transform: translateX(-100%); transition: 0.3s; }
+    .sidebar.is-open { transform: translateX(0); }
+}
