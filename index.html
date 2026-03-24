@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Рандомайзер РФ</title>
+    
+    <!-- Библиотеки (Иконки и Конфетти) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- ФОН -->
+    <div class="animated-bg"></div>
+
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar glass-panel is-fixed-top">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <span class="is-size-2 mr-2">🇷🇺</span>
+                <div>
+                    <h1 class="title is-5 mb-0 has-text-weight-bold" style="color: #0039a6;">Рандомайзер <span style="color: #d52b1e;">РФ</span></h1>
+                    <p class="subtitle is-7 has-text-grey">Отечественный сервис</p>
+                </div>
+            </a>
+            <a role="button" class="navbar-burger" onclick="toggleSidebar()">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-end p-2 is-flex is-align-items-center">
+            <button id="sound_toggle" class="button is-ghost is-rounded" onclick="toggleMute()">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="button is-ghost is-rounded" onclick="toggleTheme()">
+                <i class="fas fa-adjust"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="columns is-gapless is-fullheight mt-6 pt-4 app-container">
+        
+        <!-- БОКОВАЯ ПАНЕЛЬ -->
+        <div class="column is-2 sidebar glass-panel">
+            <aside class="menu p-4">
+                <p class="menu-label">Базовые</p>
+                <ul class="menu-list">
+                    <li><a class="is-active" onclick="switchTool('standard', this)"><i class="fas fa-hashtag fa-fw"></i> Числа</a></li>
+                    <li><a onclick="switchTool('letter', this)"><i class="fas fa-font fa-fw"></i> Буква (А-Я)</a></li>
+                    <li><a onclick="switchTool('list', this)"><i class="fas fa-list-ol fa-fw"></i> Списки</a></li>
+                </ul>
+                
+                <p class="menu-label">Решения</p>
+                <ul class="menu-list">
+                    <li><a onclick="switchTool('yesno', this)"><i class="fas fa-check-circle fa-fw has-text-success"></i> Да / Нет</a></li>
+                    <li><a onclick="switchTool('coin', this)"><i class="fas fa-coins fa-fw has-text-warning"></i> Монетка</a></li>
+                    <li><a onclick="switchTool('dice', this)"><i class="fas fa-dice fa-fw"></i> Кубики</a></li>
+                </ul>
+
+                <p class="menu-label">Инструменты</p>
+                <ul class="menu-list">
+                    <li><a onclick="switchTool('date', this)"><i class="fas fa-calendar-alt fa-fw"></i> Дата</a></li>
+                    <li><a onclick="switchTool('password', this)"><i class="fas fa-key fa-fw"></i> Пароли</a></li>
+                    <li><a onclick="switchTool('colors', this)"><i class="fas fa-palette fa-fw"></i> Цвета</a></li>
+                </ul>
+
+                <!-- БЛОК ПОДДЕРЖКИ -->
+                <div class="mt-5 pt-4 border-top has-text-centered patriot-block">
+                    <figure class="image mx-auto mb-2" style="width: 100%;">
+                        <img src="flag.jpg" alt="Z" class="rounded-image" onerror="this.src='https://via.placeholder.com/300x150?text=Russia'">
+                    </figure>
+                    <p class="is-size-7 has-text-weight-bold has-text-dark">
+                        Работаем для России 🇷🇺<br>Поддерживаем наших!
+                    </p>
+                </div>
+
+                <!-- РЕКЛАМА -->
+                <div class="mt-4">
+                    <a href="https://yandex.ru" target="_blank" class="ad-card">
+                        <img src="ad.jpg" class="ad-image" onerror="this.style.display='none'">
+                        <div class="ad-overlay">
+                            <i class="fas fa-external-link-alt fa-2x mb-2"></i>
+                            <span>Перейти</span>
+                        </div>
+                    </a>
+                </div>
+            </aside>
+            
+            <!-- ИСТОРИЯ -->
+            <div class="p-4 border-top">
+                <div class="is-flex is-justify-content-space-between mb-2">
+                    <span class="menu-label m-0">История</span>
+                    <span class="icon is-small is-clickable" onclick="clearHistory()"><i class="fas fa-trash-alt"></i></span>
+                </div>
+                <div id="history_log" class="history-log">
+                    <div class="is-size-7 has-text-grey-light is-italic">Пусто...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- КОНТЕНТ -->
+        <div class="column main-content">
+            
+            <!-- 1. Числа -->
+            <div id="tool_standard" class="tool-section active container">
+                <h1 class="title is-3">Генератор Чисел</h1>
+                <div class="glass-box p-5">
+                    <div class="columns">
+                        <div class="column"><label class="label">От</label><input id="std_min" class="input" type="text" value="1"></div>
+                        <div class="column"><label class="label">До</label><input id="std_max" class="input" type="number" value="100"></div>
+                        <div class="column"><label class="label">Кол-во</label><input id="std_count" class="input" type="number" value="1" max="100"></div>
+                    </div>
+                    <label class="checkbox mb-4"><input type="checkbox" id="std_unique" checked> Без повторов</label>
+                    <button onclick="generateNumbers()" class="button is-link is-large is-fullwidth shadow-btn">Сгенерировать</button>
+                </div>
+                <div id="res_standard" class="result-area mt-5 has-text-centered"></div>
+            </div>
+
+            <!-- 2. Буква (NEW) -->
+            <div id="tool_letter" class="tool-section container has-text-centered">
+                <h1 class="title is-3">Случайная Буква</h1>
+                <div class="glass-box p-6 mx-auto" style="max-width: 400px;">
+                    <div id="res_letter" class="title is-1" style="font-size: 8rem !important; min-height: 150px;">?</div>
+                    <button onclick="generateLetter()" class="button is-primary is-large is-rounded mt-4">Крутить</button>
+                </div>
+            </div>
+
+            <!-- 3. Списки -->
+            <div id="tool_list" class="tool-section container">
+                <h1 class="title is-3">Перемешать Список</h1>
+                <div class="glass-box p-5">
+                    <label class="label">Элементы (с новой строки)</label>
+                    <textarea id="list_input" class="textarea" rows="6" placeholder="Иванов&#10;Петров&#10;Сидоров"></textarea>
+                    <button onclick="shuffleList()" class="button is-success is-fullwidth mt-3">Перемешать</button>
+                </div>
+                <div id="res_list" class="content mt-5 p-4 glass-box" style="display:none;"></div>
+            </div>
+
+            <!-- 4. Да / Нет (NEW) -->
+            <div id="tool_yesno" class="tool-section container has-text-centered">
+                <h1 class="title is-3">Да или Нет?</h1>
+                <div class="glass-box p-6 mx-auto mt-5" style="max-width: 500px;">
+                    <div id="res_yesno" class="title is-1 mb-5">...</div>
+                    <div class="columns">
+                        <div class="column"><button onclick="getYesNo()" class="button is-large is-fullwidth is-info">Спросить</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Монетка -->
+            <div id="tool_coin" class="tool-section container has-text-centered">
+                <h1 class="title is-3">Орел или Решка</h1>
+                <div id="coin_icon" class="coin-wrapper my-6" onclick="flipCoin()">
+                    <div class="coin-face"><i class="fas fa-ruble-sign"></i></div>
+                </div>
+                <h2 id="res_coin" class="title is-3">Нажми на монету</h2>
+            </div>
+
+            <!-- 6. Кубики -->
+            <div id="tool_dice" class="tool-section container has-text-centered">
+                <h1 class="title is-3">Игральные Кости</h1>
+                <div class="buttons is-centered mb-5">
+                    <button class="button is-rounded" onclick="rollDice(1)">1 кубик</button>
+                    <button class="button is-rounded" onclick="rollDice(2)">2 кубика</button>
+                </div>
+                <div id="res_dice" class="py-5"></div>
+                <button onclick="rollDice()" class="button is-danger is-large is-rounded shadow-btn">Бросить</button>
+            </div>
+
+            <!-- 7. Дата (NEW) -->
+            <div id="tool_date" class="tool-section container">
+                <h1 class="title is-3">Генератор Дат</h1>
+                <div class="glass-box p-5">
+                    <div class="columns">
+                        <div class="column"><label class="label">C</label><input type="date" id="date_start" class="input"></div>
+                        <div class="column"><label class="label">По</label><input type="date" id="date_end" class="input"></div>
+                    </div>
+                    <button onclick="generateDate()" class="button is-warning is-large is-fullwidth">Получить Дату</button>
+                </div>
+                <h2 id="res_date" class="title is-2 has-text-centered mt-5"></h2>
+            </div>
+
+            <!-- 8. Пароли -->
+            <div id="tool_password" class="tool-section container">
+                <h1 class="title is-3">Генератор Паролей</h1>
+                <div class="glass-box p-5">
+                    <input id="pass_len" type="range" min="6" max="32" value="12" class="slider is-fullwidth mb-4">
+                    <div class="field is-grouped mb-4">
+                        <label class="checkbox mr-3"><input id="chk_upper" type="checkbox" checked> A-Z</label>
+                        <label class="checkbox mr-3"><input id="chk_num" type="checkbox" checked> 0-9</label>
+                        <label class="checkbox"><input id="chk_sym" type="checkbox" checked> !@#</label>
+                    </div>
+                    <div class="field has-addons">
+                        <div class="control is-expanded"><input id="pass_out" class="input is-medium" readonly></div>
+                        <div class="control"><button class="button is-primary is-medium" onclick="genPass()">Gen</button></div>
+                        <div class="control"><button class="button is-dark is-medium" onclick="copyPass()">Copy</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Цвета -->
+            <div id="tool_colors" class="tool-section container">
+                <h1 class="title is-3">Палитра</h1>
+                <button onclick="genColors()" class="button is-link is-light is-fullwidth mb-4">Обновить</button>
+                <div id="res_colors" class="columns is-mobile is-multiline is-gapless palette-container shadow-btn"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- HACKER CONSOLE (Скрытая) -->
+    <div id="hacker_terminal" class="hacker-overlay" style="display: none;">
+        <div class="hacker-screen">
+            <div class="hacker-header">
+                <span>SYSTEM_ROOT // RU_NET</span>
+                <span class="is-clickable" onclick="closeConsole()">[X]</span>
+            </div>
+            <div id="hacker_out" class="hacker-output"></div>
+            <div class="hacker-input">
+                <span>admin@ru:~#</span>
+                <input type="text" id="hacker_cmd" autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
